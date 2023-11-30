@@ -6,7 +6,9 @@ BERTScore-p/r/F1
 QAGS, Q^2
 FactScore
 '''
-import json, os, factscore, nltk
+import json, os, nltk, csv
+from factscore.factscorer import FactScorer
+fs = FactScorer(openai_key="/home/dou/factscoreData/openai_key.txt", data_dir="/home/dou/factscoreData")
 import numpy as np
 from factsumm import FactSumm
 from rich import print
@@ -15,6 +17,8 @@ from rouge_score import rouge_scorer                    # ROUGE
 from bert_score import score                            # BERTScore
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction     # BLEU
 from BARTScore.bart_score import BARTScorer
+from Qsquared.pipeline.run_pipeline import calc_scores
+from collections import defaultdict
 factsumm = FactSumm()
 bart_scorer = BARTScorer(device='cuda:0', checkpoint='facebook/bart-large-cnn')
 scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
@@ -31,17 +35,35 @@ Dataset = [
 ]
 prefix = "/home/dou/UniFlexFactor/dataset"
 Model = ["newbing.jsonl", "chatgpt.jsonl", "llama7b.jsonl", "llama13b.jsonl", "vicuna7b.jsonl", "vicuna13b.jsonl"]
+outputPath = "result.json"
 fileNum = 200
-def factScore():
-    pass
-def Q_square():
-    pass
+def factScore(topic: str, cand: str, ref: str):
+    fact_score = fs.get_score([topic], [cand], gamma=10)["score"]
+    return { 
+        "factscore": fact_score
+    }
+def Q_square(cand: str, ref: str):
+    # 准备数据
+    data = [
+        ["", "episode_idx", "round", "response", "knowledge", "gold"],
+        [0, 0, 0, cand.replace("\n", ""), ref.replace("\n", ""), ref.replace("\n", "")]
+    ]
+    csv_file = "Qsquared/third_party/data/temp.csv"
+    with open(csv_file, mode="w", newline='', encoding='utf-8') as file:
+        writer = csv.writer(file, delimiter="\t")
+        writer.writerows(data)
+    Q2_score = calc_scores(
+        "Qsquared/third_party/data/temp.csv", 'beam', single=True, remove_personal=True, out_path='Qsquared/third_party/data/temp_out', save_steps=False
+    )
+    # 读取数据
+    return {
+        "Q2_score": round(Q2_score[0], 3)
+    }
 def QAGS(cand: str, ref: str):
-    QAGS_score = factsumm.extract_qas(ref, cand, device="cuda")
+    QAGS_score = factsumm.extract_qas(ref, cand)
     return {
         "QAGS_score": round(QAGS_score, 3)
     }
-
 def bleuScore(cand: str, ref: str):
     ref = [tokenize(ref.lower())]
     cand = tokenize(cand.lower())
@@ -86,33 +108,61 @@ def bartScore(pred: str, ref: str):
 
 
 if __name__ == "__main__":
+    resultDict = dict()
+    if os.path.exists(outputPath):
+        with open(outputPath, 'r', encoding='utf-8') as fp:
+            resultDict = json.load(fp)
+    else:
+        for dataset in Dataset:
+            resultDict[dataset[0]] = dict()
+            for model in Model:
+                resultDict[dataset[0]][model.replace(".jsonl", "")] = defaultdict(list)
     for dataset, ansKey in Dataset:
         for model in Model:
             fileName = os.path.join(prefix, dataset, model)
             resultList = list()
             with open(fileName, 'r', encoding='utf-8') as fp:
                 data = fp.readlines()[:fileNum]
-                for line in tqdm(data, desc=f"{dataset}, {model}"):
-                    result = dict()
+                for dataID, line in enumerate(tqdm(data, desc=f"{dataset}, {model}")):
+                    sample_result = dict()
                     line = json.loads(line)
                     modelText = line["modelText"]
                     if dataset == "NQ":
+                        topic = line["prompt"].split("Title: ")[1].split("Introduction:")[0].strip()
                         answer = line["answer"][0]
                     if dataset == "HotpotQA":
+                        topic = line["question"]
                         answer = line["answer"]
                     if dataset == "truthfulQA":
+                        topic = line["question"]
                         answer = line["answer"][0]
                     if dataset == "cnndm":
+                        if "title" in line:
+                            topic = line["title"]
+                        elif "question" in line:
+                            topic = line["question"]
+                        else: assert False, line
                         answer = line["summary"]
                     if dataset == "multi-news":
+                        if "title" in line:
+                            topic = line["title"]
+                        elif "question" in line:
+                            topic = line["question"]
+                        else: assert False, line
                         answer = line["summary"]
                     if dataset == "msmarco":
+                        topic = line["question"]
                         answer = line["summary"][0] if line["summary"] != [] else "Answers are unavailable."
-                    result.update(bleuScore(modelText, answer))
-                    result.update(rougeScore(modelText, answer))
-                    result.update(bertScore(modelText, answer))
-                    result.update(bartScore(modelText, answer))
-                    result.update(QAGS(modelText, answer))
-                    print(result)
-                    break
+                    # sample_result.update(bleuScore(modelText, answer))
+                    # sample_result.update(rougeScore(modelText, answer))
+                    sample_result.update(bertScore(modelText, answer))
+                    # sample_result.update(bartScore(modelText, answer))
+                    # sample_result.update(QAGS(modelText, answer))
+                    # sample_result.update(Q_square(modelText, answer))
+                    for _metric, _score in sample_result.items():
+                        if _metric not in resultDict[dataset][model.replace(".jsonl", "")]:
+                            resultDict[dataset][model.replace(".jsonl", "")][_metric] = list()
+                        else: resultDict[dataset][model.replace(".jsonl", "")][_metric].append(_score)
+            with open(outputPath, 'w') as fw:
+                fw.write(json.dumps(resultDict))
         print("*"*20)

@@ -1,0 +1,336 @@
+[nltk_data] Downloading package punkt to /home/dou/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/transformers/models/auto/modeling_auto.py:1499: FutureWarning: The class `AutoModelWithLMHead` is deprecated and will be removed in a future version. Please use `AutoModelForCausalLM` for causal language models, `AutoModelForMaskedLM` for masked language models and `AutoModelForSeq2SeqLM` for encoder-decoder models.
+  warnings.warn(
+[nltk_data] Downloading package punkt to /home/dou/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+NQ, newbing.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 2-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 3-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 4-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A
+100%|██████████| 1/1 [00:00<00:00,  1.91it/s][A100%|██████████| 1/1 [00:00<00:00,  1.91it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 436.09it/s]
+done in 0.53 seconds, 1.89 sentences/sec
+Loading Question Generation Pipeline...
+Loading Question Answering Pipeline...
+Loading Named Entity Recognition Pipeline...
+
+0it [00:00, ?it/s][A
+1it [00:49, 49.23s/it][A1it [00:49, 49.23s/it]
+NQ, newbing.jsonl:   0%|          | 0/200 [01:05<?, ?it/s]
+Traceback (most recent call last):
+  File "baseline.py", line 151, in <module>
+    resultDict[dataset][model][_metric].append(_score)
+KeyError: 'newbing.jsonl'
+[nltk_data] Downloading package punkt to /home/dou/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/transformers/models/auto/modeling_auto.py:1499: FutureWarning: The class `AutoModelWithLMHead` is deprecated and will be removed in a future version. Please use `AutoModelForCausalLM` for causal language models, `AutoModelForMaskedLM` for masked language models and `AutoModelForSeq2SeqLM` for encoder-decoder models.
+  warnings.warn(
+[nltk_data] Downloading package punkt to /home/dou/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+NQ, newbing.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 2-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 3-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 4-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A
+100%|██████████| 1/1 [00:00<00:00,  1.75it/s][A100%|██████████| 1/1 [00:00<00:00,  1.75it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 459.80it/s]
+done in 0.57 seconds, 1.74 sentences/sec
+Loading Question Generation Pipeline...
+Loading Question Answering Pipeline...
+Loading Named Entity Recognition Pipeline...
+
+0it [00:00, ?it/s][A
+1it [00:57, 57.73s/it][A1it [00:57, 57.73s/it]
+NQ, newbing.jsonl:   0%|          | 0/200 [01:15<?, ?it/s]
+NQ, chatgpt.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 35.12it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 561.94it/s]
+done in 0.03 seconds, 31.96 sentences/sec
+
+0it [00:00, ?it/s][A
+1it [05:12, 312.78s/it][A1it [05:12, 312.78s/it]
+NQ, chatgpt.jsonl:   0%|          | 0/200 [05:18<?, ?it/s]
+NQ, llama7b.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 18.64it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 465.62it/s]
+done in 0.06 seconds, 17.50 sentences/sec
+
+0it [00:00, ?it/s][A
+1it [16:30, 990.24s/it][A1it [16:30, 990.24s/it]
+NQ, llama7b.jsonl:   0%|          | 0/200 [16:36<?, ?it/s]
+NQ, llama13b.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 2-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 3-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 4-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 26.06it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 501.35it/s]
+done in 0.04 seconds, 22.48 sentences/sec
+
+0it [00:00, ?it/s][A
+1it [05:59, 359.98s/it][A1it [05:59, 359.98s/it]
+NQ, llama13b.jsonl:   0%|          | 0/200 [06:05<?, ?it/s]
+NQ, vicuna7b.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 2-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 3-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 4-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 29.60it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 527.78it/s]
+done in 0.04 seconds, 27.00 sentences/sec
+
+0it [00:00, ?it/s][A
+1it [05:23, 323.14s/it][A1it [05:23, 323.14s/it]
+NQ, vicuna7b.jsonl:   0%|          | 0/200 [05:29<?, ?it/s]
+NQ, vicuna13b.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 2-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 3-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 4-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 29.07it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 363.90it/s]
+done in 0.04 seconds, 26.03 sentences/sec
+
+0it [00:00, ?it/s][A
+1it [05:00, 300.42s/it][A1it [05:00, 300.42s/it]
+NQ, vicuna13b.jsonl:   0%|          | 0/200 [05:06<?, ?it/s]
+********************
+HotpotQA, newbing.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 2-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 3-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/nltk/translate/bleu_score.py:552: UserWarning: 
+The hypothesis contains 0 counts of 4-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 33.56it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 512.94it/s]
+done in 0.03 seconds, 30.26 sentences/sec
+
+0it [00:00, ?it/s][A
+1it [00:37, 37.75s/it][A1it [00:37, 37.75s/it]
+HotpotQA, newbing.jsonl:   0%|          | 0/200 [00:43<?, ?it/s]
+HotpotQA, chatgpt.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 34.62it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 597.39it/s]
+done in 0.03 seconds, 31.87 sentences/sec
+
+0it [00:00, ?it/s][A
+1it [04:37, 277.95s/it][A1it [04:37, 277.95s/it]
+HotpotQA, chatgpt.jsonl:   0%|          | 0/200 [04:43<?, ?it/s]
+HotpotQA, llama7b.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 30.93it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 565.73it/s]
+done in 0.04 seconds, 28.38 sentences/sec
+
+0it [00:00, ?it/s][A
+1it [03:24, 204.28s/it][A1it [03:24, 204.28s/it]
+HotpotQA, llama7b.jsonl:   0%|          | 0/200 [03:30<?, ?it/s]
+HotpotQA, llama13b.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]calculating scores...
+computing bert embedding.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 23.20it/s]
+computing greedy matching.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A100%|██████████| 1/1 [00:00<00:00, 478.86it/s]
+done in 0.05 seconds, 21.29 sentences/sec
+
+0it [00:00, ?it/s][A
+1it [09:31, 571.43s/it][A1it [09:31, 571.43s/it]
+HotpotQA, llama13b.jsonl:   0%|          | 0/200 [09:37<?, ?it/s]
+HotpotQA, vicuna7b.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]HotpotQA, vicuna7b.jsonl:   0%|          | 0/200 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/urllib3/connectionpool.py", line 712, in urlopen
+    self._prepare_proxy(conn)
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/urllib3/connectionpool.py", line 1012, in _prepare_proxy
+    conn.connect()
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/urllib3/connection.py", line 419, in connect
+    self.sock = ssl_wrap_socket(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/urllib3/util/ssl_.py", line 449, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/urllib3/util/ssl_.py", line 493, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/ssl.py", line 500, in wrap_socket
+    return self.sslsocket_class._create(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/ssl.py", line 1040, in _create
+    self.do_handshake()
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/ssl.py", line 1309, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLEOFError: EOF occurred in violation of protocol (_ssl.c:1131)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/urllib3/connectionpool.py", line 799, in urlopen
+    retries = retries.increment(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/urllib3/util/retry.py", line 592, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /roberta-large/resolve/main/tokenizer_config.json (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1131)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "baseline.py", line 146, in <module>
+    topic = line["question"]
+  File "baseline.py", line 95, in bertScore
+    P, R, F1 = score(preds, refs, model_type=model_type, lang='en', verbose=True)    
+  File "/home/dou/.local/lib/python3.8/site-packages/bert_score/score.py", line 97, in score
+    tokenizer = get_tokenizer(model_type, use_fast_tokenizer)
+  File "/home/dou/.local/lib/python3.8/site-packages/bert_score/utils.py", line 329, in get_tokenizer
+    tokenizer = AutoTokenizer.from_pretrained(model_type, use_fast=use_fast)
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/transformers/models/auto/tokenization_auto.py", line 701, in from_pretrained
+    tokenizer_config = get_tokenizer_config(pretrained_model_name_or_path, **kwargs)
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/transformers/models/auto/tokenization_auto.py", line 534, in get_tokenizer_config
+    resolved_config_file = cached_file(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/transformers/utils/hub.py", line 429, in cached_file
+    resolved_file = hf_hub_download(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/huggingface_hub/utils/_validators.py", line 118, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/huggingface_hub/file_download.py", line 1232, in hf_hub_download
+    metadata = get_hf_file_metadata(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/huggingface_hub/utils/_validators.py", line 118, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/huggingface_hub/file_download.py", line 1599, in get_hf_file_metadata
+    r = _request_wrapper(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/huggingface_hub/file_download.py", line 417, in _request_wrapper
+    response = _request_wrapper(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/huggingface_hub/file_download.py", line 452, in _request_wrapper
+    return http_backoff(
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/huggingface_hub/utils/_http.py", line 258, in http_backoff
+    response = session.request(method=method, url=url, **kwargs)
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/huggingface_hub/utils/_http.py", line 63, in send
+    return super().send(request, *args, **kwargs)
+  File "/home/dou/anaconda3/envs/fe/lib/python3.8/site-packages/requests/adapters.py", line 517, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /roberta-large/resolve/main/tokenizer_config.json (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1131)')))"), '(Request ID: fdca4adc-3548-4753-897a-4aadf948b2dc)')
