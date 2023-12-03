@@ -1,0 +1,15 @@
+openai
+scipy
+rich
+gradio
+mdtex2html
+numpy
+spacy
+pysbd
+sumeval
+transformers
+flair
+bert-score
+sentencepiece
+nltk
+accelerate
