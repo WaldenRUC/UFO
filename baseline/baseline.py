@@ -103,11 +103,20 @@ def bartScore(pred: str, ref: str):
     if type(ref) == str: ref = [ref]
     bartscore = bart_scorer.score(pred, ref, batch_size=4)
     return {
-        "bartScore": round(bartscore[0], 3)
+        "bartscore": round(bartscore[0], 3)
     }
 
 
+
 if __name__ == "__main__":
+    metrics = [
+        #"rouge1", "rouge2", "rougeL", "bleu1", "bleu2", "bleu3", "bleu4",
+        # "bertscore-p", "bertscore-r", "bertscore-f1",
+        # "bartscore",
+        "QAGS_score",
+        "Q2_score",
+        # "factscore"
+    ]
     resultDict = dict()
     if os.path.exists(outputPath):
         with open(outputPath, 'r', encoding='utf-8') as fp:
@@ -124,7 +133,6 @@ if __name__ == "__main__":
             with open(fileName, 'r', encoding='utf-8') as fp:
                 data = fp.readlines()[:fileNum]
                 for dataID, line in enumerate(tqdm(data, desc=f"{dataset}, {model}")):
-                    sample_result = dict()
                     line = json.loads(line)
                     modelText = line["modelText"]
                     if dataset == "NQ":
@@ -153,16 +161,31 @@ if __name__ == "__main__":
                     if dataset == "msmarco":
                         topic = line["question"]
                         answer = line["summary"][0] if line["summary"] != [] else "Answers are unavailable."
-                    # sample_result.update(bleuScore(modelText, answer))
-                    # sample_result.update(rougeScore(modelText, answer))
-                    sample_result.update(bertScore(modelText, answer))
-                    # sample_result.update(bartScore(modelText, answer))
-                    # sample_result.update(QAGS(modelText, answer))
-                    # sample_result.update(Q_square(modelText, answer))
-                    for _metric, _score in sample_result.items():
-                        if _metric not in resultDict[dataset][model.replace(".jsonl", "")]:
-                            resultDict[dataset][model.replace(".jsonl", "")][_metric] = list()
-                        else: resultDict[dataset][model.replace(".jsonl", "")][_metric].append(_score)
+                    curRes = resultDict[dataset][model.replace(".jsonl", "")]    # metric2scoreList
+                    for metric in metrics:
+                        if metric not in curRes: 
+                            curRes[metric] = list()
+                            length = 0
+                        else: 
+                            length = len(curRes[metric])
+                        if dataID < length: continue
+                        if metric.startswith("bleu"):
+                            res = bleuScore(modelText, answer)
+                        elif metric.startswith("rouge"):
+                            res = rougeScore(modelText, answer)
+                        elif metric.startswith("bertscore"):
+                            res = bertScore(modelText, answer)
+                        elif metric == "bartscore":
+                            res = bartScore(modelText, answer)
+                        elif metric == "QAGS_score":
+                            res = QAGS(modelText, answer)
+                        elif metric == "Q2_score":
+                            res = Q_square(modelText, answer)
+                        else: assert False, metric
+                        for _metric, _score in res.items():
+                            if _metric not in curRes: 
+                                curRes[_metric] = list()
+                            curRes[_metric].append(_score)
             with open(outputPath, 'w') as fw:
                 fw.write(json.dumps(resultDict))
         print("*"*20)

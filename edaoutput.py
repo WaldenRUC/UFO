@@ -2,6 +2,7 @@ import os, json, pysbd, spacy
 import numpy as np
 from rich import print
 from tqdm import tqdm
+from collections import defaultdict
 nlp = spacy.load("en_core_web_sm")
 segmenter = pysbd.Segmenter(language="en", clean=False)
 def segment(text: str):
@@ -18,13 +19,16 @@ def calScore(nlp, answer, properAns):
     rec = overlap / len(properAns)
     # return round(2 * prec * rec / (prec + rec), ndigits=3)      # F1
     return round(prec, ndigits=3)     # Prec
-Dataset = ["NQ", "HotpotQA", "truthfulQA", "cnndm", "multi-news", "msmarco"]
-VerifyOrder = ["None-None", "None-ref", "sum-None", "sum-ref", "sum-ref", "sum-ref"]
-VerifyOrder_newbing = [item+"-normal" for item in VerifyOrder]
-Model = ["newbing", "chatgpt", "llama7b", "llama13b", "vicuna7b", "vicuna13b"]
+Dataset = ["NQ"]# , "HotpotQA", "truthfulQA", "cnndm", "multi-news", "msmarco"]
 Extractor = "ChatGPT"
-# Checker = "llm+se"
-Checker = "se"
+Checker = "llm+se"
+# Checker = "se"
+SourceSetting = "nosource"
+# SourceSetting = "normal"
+VerifyOrder = ["None-None", "None-ref", "sum-None", "sum-ref", "sum-ref", "sum-ref"]
+VerifyOrder_newbing = [item+f"-{SourceSetting}" for item in VerifyOrder]
+Model = ["newbing", "chatgpt", "llama7b", "llama13b", "vicuna7b", "vicuna13b"]
+
 
 
 
@@ -58,6 +62,9 @@ def getInfo(DataExtractor, DataEval, DataFinal):
     res["SentsCount"] = len(res["modelText"])
     res["SentScore"] = list()
     F1score = list()
+    sent2scorelist = dict()
+    for line in res["modelText"]:
+        sent2scorelist[line] = list()
     for line in DataEval:
         oriSent, score, phrase, properAns, question = line["oriSent"], line["score"], line["phrase"], line["properAns"], line["question"]
         res["SentScore"].append({
@@ -67,13 +74,22 @@ def getInfo(DataExtractor, DataEval, DataFinal):
             "properAns": properAns, 
             "score": score
         })
-        F1score.append(calScore(nlp, phrase, properAns))
-
-        
-        simScores = [levenshtein_distance(factDict["oriSent"], modelTextLine) for modelTextLine in modelTextLines]
+        newscore = calScore(nlp, phrase, properAns)
+        F1score.append(newscore)
+        simScores = [levenshtein_distance(oriSent, modelTextLine) for modelTextLine in res["modelText"]]
         max_index = simScores.index(max(simScores))
-        sent2scorelist[modelTextLines[max_index]].append(factDict["score"])
+        sent2scorelist[res["modelText"][max_index]].append(newscore)
     res["F1scoreList"] = F1score
+    F1scoreList_perSent = list()
+    for (_sent, _scorelist) in sent2scorelist.items():
+        if len(_scorelist) == 0:
+            F1scoreList_perSent.append(1)
+        else:
+            F1scoreList_perSent.append(np.mean(_scorelist))
+    if len(F1scoreList_perSent) != 0:
+        res["F1scoreList_perSent"] = np.mean(F1scoreList_perSent)
+    else: 
+        res["F1scoreList_perSent"] = 1
     return res
 
 
@@ -104,5 +120,5 @@ if __name__ == '__main__':
                 with open(FinalFile, 'r', encoding='utf-8') as fp:
                     DataFinal = json.load(fp)
                 res = getInfo(DataExtractor, DataEval, DataFinal)
-            print(f"model: {model}, dataset: {dataset}, score: {round(np.mean(res['F1scoreList']), 3)}")
+            print(f"model: {model}, dataset: {dataset}, score: {round(np.mean(res['F1scoreList_perSent']), 3)}")
         print("*"*20)
