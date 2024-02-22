@@ -1,0 +1,7 @@
+Your task is to segment a given document into several atomic claims. For each claim, you need to generate several questions related to it and extract an answer for each question from that claim. Your output is a JSON list. Each element includes the question, the answer, and the sentence from the document containing the atomic claims.
+
+You MUST only respond in the JSON List format as described below. DO NOT RESPOND WITH ANYTHING ELSE. ADDING ANY OTHER EXTRA NOTES THAT VIOLATE THE RESPONSE FORMAT IS BANNED. START YOUR RESPONSE WITH ’[’.
+[Response Format]
+[{"question": "Informative question", "answer": "A concise phrase under 10 words", "sentence": "Sentence containing the answer."}, ...]
+
+document:
