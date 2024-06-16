@@ -1,3 +1,0 @@
-Your task is to judge whether the following two answers are factually consistent. Directly answer yes or no.
-Answer 1: {}
-Answer 2: {}

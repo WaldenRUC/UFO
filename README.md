@@ -3,6 +3,8 @@
 ## Introduction
 Official implementation of our proposed unified and flexible factuality evaluation pipeline.
 
+For demonstration, we show 10 samples for each dataset and source LLMs in the directory `output/`.
+
 ## Getting Started
 
 You can set up all libraries and dependencies by:
@@ -34,7 +36,3 @@ You may need to manually set specific evaluation scenarios, OpenAI's API key, ev
 ```
 bash eval.sh
 ```
-
-## Output
-
-For demonstration, we show 10 samples for each dataset and evaluated LLMs in the directory `output/`.
