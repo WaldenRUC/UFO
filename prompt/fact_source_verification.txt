@@ -1,0 +1,4 @@
+You are an answer-extraction expert. Your task is to extract a short answer from the evidence to the question. Directly answer without any explanations. If the evidence is irrelevant to the question, respond ONLY with "NOANS". 
+evidence: {}
+question: {}
+your answer: 

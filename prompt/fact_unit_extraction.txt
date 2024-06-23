@@ -1,0 +1,78 @@
+Please breakdown the following passage into independent atomic questions and answers.
+<Passage>
+He made his acting debut in the film The Moon is the Sun’s Dream (1992), and continued to appear in small and supporting roles throughout the 1990s. 
+<Atomic Q&A>
+Question: What did he make his debut in?
+Answer: He made his acting debut in the film.
+Question: What is the name of the film in which he made his acting debut?
+Answer: He made his acting debut in The Moon is the Sun’s Dream.
+Question: What is The Moon is the Sun’s Dream?
+Answer: The Moon is the Sun’s Dream is a film.
+Question: When was The Moon is the Sun’s Dream released?
+Answer: The Moon is the Sun’s Dream was released in 1992.
+Question: What type of roles did he appear in after his acting debut?
+Answer: After his acting debut, he appeared in small and supporting roles.
+Question: When did he appear in small and supporting roles after his acting debut?
+Answer: After his acting debut, he appeared in small and supporting roles throughout the 1990s.
+
+Please breakdown the following passage into independent atomic questions and answers.
+<Passage>
+He is also a successful producer and engineer, having worked with a wide variety of artists, including Willie Nelson, Tim McGraw, and Taylor Swift. 
+<Atomic Q&A>
+Question: Is he successful?
+Answer: Yes, he is successful.
+Question: What is his profession?
+Answer: He is a producer.
+Question: Does he have another profession?
+Answer: Yes, he is also an engineer.
+Question: Has he worked with a variety of artists?
+Answer: Yes, he has worked with a wide variety of artists.
+Question: Who is Willie Nelson?
+Answer: Willie Nelson is an artist.
+Question: Has he worked with Willie Nelson?
+Answer: Yes, he has worked with Willie Nelson.
+Question: Who is Tim McGraw?
+Answer: Tim McGraw is an artist.
+Question: Has he worked with Tim McGraw?
+Answer: Yes, he has worked with Tim McGraw.
+Question: Who is Taylor Swift?
+Answer: Taylor Swift is an artist.
+Question: Has he worked with Taylor Swift?
+Answer: Yes, he has worked with Taylor Swift.
+
+Please breakdown the following passage into independent atomic questions and answers.
+<Passage>
+In 1963, Collins became one of the third group of astronauts selected by NASA and he served as the back-up Command Module Pilot for the Gemini 7 mission. 
+<Atomic Q&A>
+Question: What role did Collins become in 1963?
+Answer: Collins became an astronaut.
+Question: Which group of astronauts did Collins join?
+Answer: Collins became one of the third group of astronauts.
+Question: Who selected the third group of astronauts that Collins became a part of?
+Answer: Collins became one of the third group of astronauts selected by NASA.
+Question: When was Collins selected by NASA to be an astronaut?
+Answer: Collins became one of the third group of astronauts selected by NASA in 1963.
+Question: What was Collins's role in the Gemini 7 mission?
+Answer: He served as the Command Module Pilot for the Gemini 7 mission.
+Question: What specific role did Collins serve in for the Gemini 7 mission?
+Answer: He served as the back-up Command Module Pilot.
+
+Please breakdown the following passage into independent atomic questions and answers.
+<Passage>
+In addition to his acting roles, Bateman has written and directed two short films and is currently in development on his feature debut. 
+<Atomic Q&A>
+Question: Does Bateman have acting roles?
+Answer: Yes, Bateman has acting roles.
+Question: How many short films has Bateman written?
+Answer: Bateman has written two short films.
+Question: How many short films has Bateman directed?
+Answer: Bateman has directed two short films.
+Question: What has Bateman done in terms of writing and directing short films?
+Answer: Bateman has written and directed two short films.
+Question: What is Bateman currently working on?
+Answer: Bateman is currently in development on his feature debut.
+
+Please breakdown the following passage into independent atomic questions and answers.
+<Passage>
+{}
+<Atomic Q&A>
