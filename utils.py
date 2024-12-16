@@ -5,27 +5,16 @@ from tqdm import tqdm
 from torch.utils.data import Dataset, DataLoader
 from transformers import LlamaForCausalLM, LlamaTokenizer, AutoModelForCausalLM, AutoTokenizer, AutoConfig
 from datetime import datetime
-from openai import OpenAI
-api_key = 'sk-<xxxx>'
-client = OpenAI(
-    api_key=api_key,
-    organization='org-<xxxx>',
-)
 class UFO():
     def __init__(self,
-                phase:str = None,
-                scenario:list = None,
+                dataset:str = None,
+                extractor:str = None,
                 source_llm:list = None,
+                scenario:list = None,
                 evaluator:str = None,
                 prompt_prefix:str = None,
-                generation_prefix:str = None,
-                fact_extraction_prefix:str = None,
-                fact_extraction_model:str = None,
-                verification_prefix:str = None,
-                se_prefix:str = None,
-                lk_prefix:str = None,
-                discrimination_prefix:str = None,
-                dataset:str = None):
+                output_path:str = None
+    ):
         # ===== load prompt =====
         # replace with <passage>
         with open(os.path.join(prompt_prefix, "fact_unit_extraction.txt"), 'r', encoding='utf-8') as fp:
@@ -38,59 +27,95 @@ class UFO():
             self.prompt_fcd = fp.read()
 
         # ===== load source_llm =====
-        self.dataset = dataset
-        self.source_llm = [f'{_source_llm}.jsonl' for _source_llm in source_llm]
+        with open(dataset, 'r', encoding='utf-8') as fp:
+            self.dataset = json.load(dataset)
+        self.samples = self.dataset[f'{extractor}-extractor'][source_llm]        # [{question, answer, ....}]
+        
         self.evaluator = evaluator
         
         # ===== load evaluator =====
         self.load_evaluator()
 
-        # ===== fue =====
-        self.generation_prefix = generation_prefix
-        self.fact_extraction_prefix = fact_extraction_prefix
-        self.fact_extraction_model = fact_extraction_model
 
-        # ===== fsv =====
-        self.verification_prefix = verification_prefix
-        self.se_prefix = se_prefix
-        self.lk_prefix = lk_prefix
         self.scenario = scenario
         self.scenario_name = '+'.join(scenario)
-        
-        # ===== fcd =====
-        self.discrimination_prefix = discrimination_prefix
         
 
         
         # ===== choose a phase and run =====
-        if phase == 'fue':
-            '''
-            generation --> fact_extraction
-            '''
-            self.input_dir = os.path.join(self.generation_prefix, self.dataset)
-            self.output_dir = os.path.join(self.fact_extraction_prefix, self.fact_extraction_model, self.dataset)
-            os.makedirs(self.output_dir, exist_ok=True)
-            self.fue()
-        elif phase == 'fsv':
-            '''
-            fact_extraction --> verification
-            '''
-            self.input_dir = os.path.join(self.fact_extraction_prefix, self.fact_extraction_model, self.dataset)
-            self.se_dir = os.path.join(self.se_prefix, self.fact_extraction_model, self.dataset)
-            self.lk_dir = os.path.join(self.lk_prefix, self.fact_extraction_model, self.dataset)
-            self.output_dir = os.path.join(self.verification_prefix, self.fact_extraction_model, self.scenario_name, self.dataset)
-            os.makedirs(self.output_dir, exist_ok=True)
-            self.fsv()
-        elif phase == 'fcd':
-            '''
-            verification --> discrimination
-            '''
-            self.input_dir = os.path.join(self.verification_prefix, self.fact_extraction_model, self.scenario_name, self.dataset)
-            self.output_dir = os.path.join(self.discrimination_prefix, self.fact_extraction_model, self.scenario_name, self.dataset)
-            os.makedirs(self.output_dir, exist_ok=True)
-            self.fcd()
-        else: assert False, phase
-
+        for _id, sample in enumerate(self.samples):
+            question = sample.get('question', '')
+            answers = sample.get('answer', [])
+            answer = '\n'.join(answers)
+            model_retrieved_documents = sample.get('model_retrieved_documents', [])
+            model_retrieved_document = '\n'.join(model_retrieved_documents)
+            facts = sample.get('facts', [])
+            llm = sample.get('llm', [])     # to be verified
+            human = '\n'.join(sample.get('human', []))
+            reference = '\n'.join(sample.get('reference', []))
+            lk = sample.get('lk', '')
+            for phase in ['fsv', 'fcd']:
+                # if phase == 'fue':
+                #     '''
+                #     generation --> fact_extraction
+                #     '''
+                #     self.input_dir = os.path.join(self.generation_prefix, self.dataset)
+                #     self.output_dir = os.path.join(self.fact_extraction_prefix, self.fact_extraction_model, self.dataset)
+                #     os.makedirs(self.output_dir, exist_ok=True)
+                #     self.fue()
+                if phase == 'fsv':
+                    '''
+                    fact_extraction --> verification
+                    '''
+                    for fact in facts:
+                        verified = 0
+                        for scenario in self.scenario:
+                            if scenario == 'hu':
+                                query = self.prompt_fsv.format(human, fact['Question'])
+                                answer = self.chatgpt_call(sys_prompt='', query=query, model=self.evaluator)
+                            elif scenario == 're':
+                                query = self.prompt_fsv.format(reference, fact['Question'])
+                                answer = self.chatgpt_call(sys_prompt='', query=query, model=self.evaluator)
+                            elif scenario == 'se':
+                                se = list()
+                                for result_dict in fact['se']:
+                                    for organic in result_dict['se'].get('organic', []):
+                                        se.append(organic.get('snippet', ''))
+                                se = '\n'.join([item for item in se if len(item)>0])
+                                query = self.prompt_fsv.format(se, fact['Question'])
+                                answer = self.chatgpt_call(sys_prompt='', query=query, model=self.evaluator)
+                            elif scenario == 'lk':
+                                query = self.prompt_fsv.format(lk, fact['Question'])
+                                answer = self.chatgpt_call(sys_prompt='', query=query, model=self.evaluator)
+                            else: assert False, scenario    
+                            if answer.upper() == 'NOANS':
+                                continue    # move to the next
+                            else:
+                                fact['candidate'] = candidate
+                                verified = 1
+                                break
+                        if not verified:
+                            fact['candidate'] = 'NOANS'
+                if phase == 'fcd':
+                    '''
+                    verification --> discrimination
+                    '''
+                    for fact in facts:
+                        fact_answer = fact['Answer']
+                        candidate = fact['candidate']
+                        if candidate.upper() == 'NOANS':
+                            fact['ufo_score'] = 0
+                        else:
+                            query = self.prompt_fcd.format(fact_answer, candidate)
+                            response = self.chatgpt_call(sys_prompt='', query=query, model=self.evaluator)
+                            if 'yes' in response.lower():
+                                fact['ufo_score'] = 1
+                            else:
+                                fact['ufo_score'] = 0
+                else: assert False, phase
+                
+        with open(output_path, 'w', encoding='utf-8') as fw:
+            json.dump(self.samples, ensure_ascii=False, indent=2)
 
 
 
@@ -105,27 +130,22 @@ class UFO():
 
     def load_evaluator(self):
         '''
-        load llama3 checkpoint
+        set api_base or api_key
         '''
-        if self.evaluator == 'llama-3-8b-instruct':
-            self.tokenizer = AutoTokenizer.from_pretrained("/fs/archive/share/Meta-Llama-3-8B-Instruct")
-            self.config = AutoConfig.from_pretrained("/fs/archive/share/Meta-Llama-3-8B-Instruct")
-            self.model = AutoModelForCausalLM.from_pretrained("/fs/archive/share/Meta-Llama-3-8B-Instruct", config=self.config, torch_dtype=torch.bfloat16, device_map="cuda:0")
-            self.terminators = [
-                self.tokenizer.eos_token_id,
-                self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
-            ]
-        elif self.evaluator == 'gpt-3.5-turbo-0125':
-            pass
+        if self.evaluator == 'llama3':
+            openai.api_base = 'https://xxx.xxx.xxx.xxx:8987/v1'
+            openai.api_key = 'xxx'
+        elif self.evaluator == 'chatgpt':
+            openai.api_key = 'xxx'
         else: assert False, self.evaluator
 
     def fue(self):
         '''
         generation --> fact_extraction
         add keys: facts: List(dict("Question", "Answer")), extraction_tokens
-        input_path: /home/u2022000150/ufo/generation/nq/newbing.jsonl
+        input_path: /xxx/xxx/ufo/generation/nq/newbing.jsonl
         - question, answer, mgt, token_usage, human_written_evidences, reference_documents, model_retrieved_documents
-        output_path: /home/u2022000150/ufo/fact_extraction/llama3/nq/newbing.jsonl
+        output_path: /xxx/xxx/ufo/fact_extraction/llama3/nq/newbing.jsonl
         - question, answer, mgt, token_usage, human_written_evidences, reference_documents, model_retrieved_documents, facts
         '''
         for _id, source_llm in enumerate(self.source_llm):
@@ -154,11 +174,11 @@ class UFO():
         '''
         fact_extraction --> verification
         add keys: verified_facts: List(dict("Question", "Answer", "Extracted_answer", "source")), verification_tokens
-        input_path: /home/u2022000150/ufo/fact_extraction/llama3/nq/newbing.jsonl
-        [he/rd: /home/u2022000150/ufo/fact_extraction/llama3/nq/newbing.jsonl, human_written_evidences, reference_documents]
-        [lk: /home/u2022000150/ufo/S_lk/llama3/nq/newbing.jsonl, fact_source: List[List[str]]]
-        [se: /home/u2022000150/ufo/S_se/llama3/nq/newbing.jsonl, fact_source: str]
-        output_path: /home/u2022000150/ufo/verification/llama3/se+lk/nq/newbing.jsonl
+        input_path: /xxx/xxx/ufo/fact_extraction/llama3/nq/newbing.jsonl
+        [he/rd: /xxx/xxx/ufo/fact_extraction/llama3/nq/newbing.jsonl, human_written_evidences, reference_documents]
+        [lk: /xxx/xxx/ufo/S_lk/llama3/nq/newbing.jsonl, fact_source: List[List[str]]]
+        [se: /xxx/xxx/ufo/S_se/llama3/nq/newbing.jsonl, fact_source: str]
+        output_path: /xxx/xxx/ufo/verification/llama3/se+lk/nq/newbing.jsonl
         '''
         for _id, source_llm in enumerate(self.source_llm):
             input_path = os.path.join(self.input_dir, source_llm)
@@ -173,20 +193,20 @@ class UFO():
             with open(input_path, 'r', encoding='utf-8') as fp:
                 data = fp.readlines()[read_num:]
             # get fact source passages; each element in passages['he'/'rd'/'se'/'lk'] contains a passage list
-            fact_source_passages = {'he': list(), 'rd': list(), 'se': list(), 'lk': list()}
-            if 'he' in self.scenario:
+            fact_source_passages = {'hu': list(), 're': list(), 'se': list(), 'lk': list()}
+            if 'hu' in self.scenario:
                 for line in data:
                     line = json.loads(line)
-                    fact_source_passages['he'].append(line['human_written_evidences'])
+                    fact_source_passages['hu'].append(line['human_written_evidences'])
             else: 
-                fact_source_passages['he'] = [list() for line in data]
+                fact_source_passages['hu'] = [list() for line in data]
 
-            if 'rd' in self.scenario:
+            if 're' in self.scenario:
                 for line in data:
                     line = json.loads(line)
-                    fact_source_passages['rd'].append(line['reference_documents'])
+                    fact_source_passages['re'].append(line['reference_documents'])
             else:
-                fact_source_passages['rd'] = [list() for line in data]
+                fact_source_passages['re'] = [list() for line in data]
 
             if 'se' in self.scenario:
                 with open(se_path, 'r', encoding='utf-8') as fp:
@@ -252,8 +272,8 @@ class UFO():
         '''
         verification --> discrimination
         add keys: discrimination: List(dict("Question", "Answer", "Extracted_answer", "source", "judge")), discrimination_tokens
-        input_path: /home/u2022000150/ufo/verification/llama3/se+lk/nq/newbing.jsonl
-        output_path: /home/u2022000150/ufo/discrimination/llama3/se+lk/nq/newbing.jsonl
+        input_path: /xxx/xxx/ufo/verification/llama3/se+lk/nq/newbing.jsonl
+        output_path: /xxx/xxx/ufo/discrimination/llama3/se+lk/nq/newbing.jsonl
         '''
         for _id, source_llm in enumerate(self.source_llm):
             input_path = os.path.join(self.input_dir, source_llm)
@@ -307,29 +327,27 @@ class UFO():
                 input_ids, 
                 max_new_tokens=max_new_tokens, 
                 eos_token_id=self.terminators,
-                do_sample=True,
-                temperature=0.6,
-                top_p=0.9
+                temperature=0
             )
             response = outputs[0][input_ids.shape[-1]:]
             response = self.tokenizer.decode(response, skip_special_tokens=True)
             return response
-        elif self.evaluator == 'gpt-3.5-turbo-0125':
+        elif self.evaluator == 'chatgpt':
             return self.chatgpt_call(sys_prompt, query)
         else: assert False, self.evaluator
     
-    def chatgpt_call(self, sys_prompt, query):
+    def chatgpt_call(self, sys_prompt, query, model='chatgpt', max_tokens=2048):
         while True:
             try:
-                completion = client.chat.completions.create(
-                    model='gpt-3.5-turbo-0125',
+                response = openai.ChatCompletion.create(
+                    model=model,
                     messages=[
                         {"role": "system", "content": sys_prompt},
                         {"role": "user", "content": query}
-                    ]
-                )
-                tokens = completion.usage.completion_tokens
-                response = completion.choices[0].message.content
+                    ],
+                    max_tokens=max_tokens,
+                    temperature=0
+                )['choices'][0]['message']['content']
                 break
             except Exception as e:
                 print(f"error!\n{e}")

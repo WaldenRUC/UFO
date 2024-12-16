@@ -1,20 +1,17 @@
-# UFO: a Unified and Flexible Framework for Evaluating Factuality of Large Language Models
+## UFO: a Unified and Flexible Framework for Evaluating Factuality of Large Language Models
+### Under Review
 
-## Introduction
-Official implementation of our proposed unified and flexible factuality evaluation pipeline.
+### Dataset
+- data/
 
-For demonstration, we show 20 samples for each dataset and source LLMs in the directory `generation/`.
 
-## Getting Started
-
-You can set up all libraries and dependencies by:
+### To reproduce baseline methods, run the script:
 ```
-pip install -r requirements.txt
+bash run_baseline.sh
 ```
 
-## Run
+### To reproduce UFO, run the script:
 
-You can adjust the parameters and run:
 ```
 bash run.sh
 ```

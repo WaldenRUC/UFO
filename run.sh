@@ -1,43 +1,40 @@
-prompt_prefix=/home/u2022000150/ufo/prompt
-generation_prefix=/home/u2022000150/ufo/generation
-fact_extraction_prefix=/home/u2022000150/ufo/fact_extraction
-verification_prefix=/home/u2022000150/ufo/verification
-discrimination_prefix=/home/u2022000150/ufo/discrimination
-se_prefix=/home/u2022000150/ufo/S_se
-lk_prefix=/home/u2022000150/ufo/S_lk
+# ===== source LLM =====
+source_llm=(newbing)
+# source_llm=(gpt0125)
 
 
-fact_extraction_model=llama3
-# fact_extraction_model=chatgpt
 
-
+# ===== dataset =====
 dataset=nq
-# dataset=hotpotqa
-# dataset=truthfulqa
+# dataset=hotpotQA
+# dataset=truthfulQA
 # dataset=cnndm
-# dataset=multinews
+# dataset=multi-news
 # dataset=msmarco
 
 
-phase=fue
-# phase=fsv
-# phase=fcd
+
+evaluated_file_path=/xxx/xxx/xxx/data/${dataset}.json
+
+cuda=0
 
 
-evaluator=llama-3-8b-instruct
-# evaluator=gpt-3.5-turbo-0125
+
+# ===== scoring LLM =====
+eva_llm=llama3
+# eva_llm=chatgpt
+
+mkdir -p /xxx/xxx/xxx/data/${phase}/${dataset}
+
+output_path=/xxx/xxx/xxx/data/${phase}/${dataset}/${source_llm}.json
 
 
-CUDA_VISIBLE_DEVICES=0 python -u run.py \
-    --phase ${phase} \
-    --scenario se lk \
-    --source_llm newbing gpt0125 llama2-7B llama2-13B llama2-70B llama3-8B llama3-70B Qwen-7B Qwen-14B \
-    --evaluator llama-3-8b-instruct \
-    --prompt_prefix ${prompt_prefix} \
-    --generation_prefix ${generation_prefix} \
-    --fact_extraction_prefix ${fact_extraction_prefix} \
-    --fact_extraction_model ${fact_extraction_model} \
-    --verification_prefix ${verification_prefix} \
-    --se_prefix ${se_prefix} \
-    --lk_prefix ${lk_prefix} \
-    --dataset ${dataset}
+
+CUDA_VISIBLE_DEVICES=${cuda} python -u run.py \
+    --dataset ${evaluated_file_path} \
+    --extractor ${eva_llm} \
+    --source_llm ${source_llm} \
+    --scenario hu re se lk \
+    --evaluator ${eva_llm} \
+    --prompt_prefix /xxx/xxx/xxx/prompt \
+    --output_path ${output_path}

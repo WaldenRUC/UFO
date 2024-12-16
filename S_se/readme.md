@@ -1,1 +1,0 @@
-# Web search results $S_{se}$ stored in the directory
